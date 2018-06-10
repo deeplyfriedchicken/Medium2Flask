@@ -6,7 +6,7 @@ class PostModel(db.Model):
     __tablename__ = 'posts'
 
     id = db.Column(db.Integer, primary_key=True)
-    account = db.Column(db.String(80))
+    account_id = db.Column(db.Integer, db.ForeignKey('accounts.id'))
     title = db.Column(db.String(80))
     pub_date = db.Column(db.DateTime)
     link = db.Column(db.String(300))
@@ -15,8 +15,8 @@ class PostModel(db.Model):
     description = db.Column(db.Text)
     
 
-    def __init__(self, account, title, pub_date, link, author, thumbnail, description):
-        self.account = account
+    def __init__(self, account_id, title, pub_date, link, author, thumbnail, description):
+        self.account_id = account_id
         self.title = title
         self.pub_date = pub_date
         self.link = link
@@ -28,7 +28,7 @@ class PostModel(db.Model):
     def json(self):
         return {
             'id': self.id,
-            'account': self.account,
+            'account_id': self.account_id,
             'title': self.title,
             'publication_date': self.pub_date.__str__(),
             'link': self.link,

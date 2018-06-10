@@ -5,7 +5,7 @@ This application serves as a Flask backend for users who want a simple Medium AP
 ## Setup
 1. Clone the repository
 2. Run `pip install -r requirements.txt` after cloning the repository
-3. Configure secrets.py which includes your secret key and the sqlite database path
+3. Duplicate `secrets.example.py` and rename it `secrets.py` to include your actual information. This includes your secret key, sqlite database path, and email / password for a single user login
 4. Start the actual app using `python app.py` and navigate to `/api/posts` to create the database
 5. Run `python cron.py` file to start the scheduler for routine data pulls 
 
