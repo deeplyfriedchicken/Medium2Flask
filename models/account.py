@@ -1,7 +1,7 @@
 import sqlite3
 from db import db
 
-from models.post import PostModel
+from models.blog import PostModel
 
 
 class AccountModel(db.Model):

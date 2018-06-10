@@ -1,7 +1,7 @@
 import requests, json, urllib.parse
 from datetime import datetime
 
-from models.post import PostModel
+from models.blog import PostModel
 
 from models.account import AccountModel
 
