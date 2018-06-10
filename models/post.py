@@ -45,6 +45,10 @@ class PostModel(db.Model):
     def find_all(cls):
         return cls.query.all()
 
+    @classmethod
+    def find_by_account(cls, account_id):
+        return cls.query.filter_by(account_id=account_id)
+
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()

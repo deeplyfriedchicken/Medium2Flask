@@ -24,7 +24,7 @@ jwt = JWTManager(app)  # not creating /auth
 
 api.add_resource(PostList, '/api/posts')
 api.add_resource(Category, '/api/category')
-api.add_resource(Account, '/api/account')
+api.add_resource(Account, '/api/account/<string:name>')
 api.add_resource(AccountList, '/api/accounts')
 
 if __name__ == '__main__':

@@ -1,6 +1,8 @@
 import sqlite3
 from db import db
 
+from models.post import PostModel
+
 
 class AccountModel(db.Model):
     __tablename__ = 'accounts'
@@ -9,7 +11,7 @@ class AccountModel(db.Model):
     name = db.Column(db.String(80))
     is_active = db.Column(db.Boolean)
 
-    posts = db.relationship('PostModel', lazy='dynamic')
+    posts = db.relationship('PostModel', lazy='dynamic', cascade="all, delete-orphan")
 
     def __init__(self, name, is_active = True):
         self.name = name
