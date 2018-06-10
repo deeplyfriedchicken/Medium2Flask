@@ -36,6 +36,19 @@ class Account(Resource):
 
         return account.json(), 201
 
+    def put(self, name):
+        data = Account.parser.parse_args()
+
+        account = AccountModel.find_by_name(name)
+
+        if account is None:
+            account = AccountModel(name, **data)
+        else:
+            account.is_active = data['is_active']
+
+        account.save_to_db()
+        return account.json()
+
     def delete(self, name):
         account = AccountModel.find_by_name(name)
         if account:
