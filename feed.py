@@ -1,7 +1,7 @@
 import requests, json, urllib.parse
 from datetime import datetime
 
-from models.blog import PostModel
+from models.blog import PostModel, CategoryModel
 
 from models.account import AccountModel
 
@@ -27,6 +27,7 @@ class FeedScraper():
                 pub_date = datetime.strptime(item['pubDate'], '%Y-%m-%d %H:%M:%S')
                 # if exists, do not save unless pubDate is different
                 post = PostModel.find_by_title(item['title'])
+                categories = [CategoryModel.get_or_create(category) for category in item['categories']]
                 new_post = PostModel(
                         accounts[i].id,
                         item['title'],
@@ -34,7 +35,8 @@ class FeedScraper():
                         item['link'],
                         item['author'],
                         item['thumbnail'],
-                        item['description']
+                        item['description'],
+                        categories
                     )
                 if post is None:
                     # add new

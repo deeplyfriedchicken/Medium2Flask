@@ -31,6 +31,7 @@ class PostModel(db.Model):
         self.categories = categories
 
     def json(self):
+        categories = [category.name for category in self.categories]
         return {
             'id': self.id,
             'account_id': self.account_id,
@@ -39,7 +40,8 @@ class PostModel(db.Model):
             'link': self.link,
             'author': self.author,
             'thumbnail': self.thumbnail,
-            'description': self.description
+            'description': self.description,
+            'categories': categories
         }
 
     @classmethod
@@ -81,6 +83,13 @@ class CategoryModel(db.Model):
     @classmethod
     def find_by_name(cls, name):
         return cls.query.filter_by(name=name).first()
+
+    @classmethod
+    def get_or_create(cls, name):
+        category = cls.query.filter_by(name=name).first()
+        if category is None:
+            category = CategoryModel(name)
+        return category
 
     @classmethod
     def find_all(cls):
