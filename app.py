@@ -2,8 +2,7 @@ from flask import Flask, jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 
-from resources.post import Post, PostList
-from resources.category import Category, CategoryList
+from resources.blog import Post, PostList
 from resources.account import Account, AccountList
 
 from secrets import DB_PATH, SECRET_KEY
@@ -23,7 +22,6 @@ def create_tables():
 jwt = JWTManager(app)  # not creating /auth
 
 api.add_resource(PostList, '/api/posts')
-api.add_resource(Category, '/api/category')
 api.add_resource(Account, '/api/account/<string:name>')
 api.add_resource(AccountList, '/api/accounts')
 
