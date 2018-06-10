@@ -3,7 +3,7 @@ from datetime import datetime
 
 from models.post import PostModel
 
-from accounts import ACCOUNTS
+from models.account import AccountModel
 
 
 class FeedScraper():
@@ -12,7 +12,8 @@ class FeedScraper():
         self.url = url
 
     def getPosts(self):
-        urls = [(self.url + account) for account in ACCOUNTS]
+        accounts = AccountModel.find_all()
+        urls = [(self.url + account.name) for account in accounts]
         i = 0
         for url in urls:
             print('Pulling posts from {}...'.format(url))
@@ -27,7 +28,7 @@ class FeedScraper():
                 # if exists, do not save unless pubDate is different
                 post = PostModel.find_by_title(item['title'])
                 new_post = PostModel(
-                        ACCOUNTS[i],
+                        accounts[i].id,
                         item['title'],
                         pub_date,
                         item['link'],
@@ -39,7 +40,7 @@ class FeedScraper():
                     # add new
                     new_post.save_to_db()
                 else:
-                    if pub_date != post.publication_date:
+                    if pub_date != post.pub_date:
                         # delete old
                         post.delete_from_db()
                         new_post.save_to_db()

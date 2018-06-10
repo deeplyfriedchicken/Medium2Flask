@@ -1,3 +1,0 @@
-ACCOUNTS = [
-  '@medium'
-]
