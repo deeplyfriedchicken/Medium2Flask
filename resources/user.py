@@ -13,10 +13,10 @@ from models.user import UserModel
 from blacklist import BLACKLIST
 
 _user_parser = reqparse.RequestParser()
-_user_parser.add_argument('username',
+_user_parser.add_argument('email',
                           type=str,
                           required=True,
-                          help="Username is required")
+                          help="E-mail address is required")
 _user_parser.add_argument('password',
                           type=str,
                           required=True,
@@ -26,14 +26,14 @@ _user_parser.add_argument('password',
 class User(Resource):
     @classmethod
     def get(cls, user_id):
-        user = UserModel.find_by_username_or_id('id', user_id)
+        user = UserModel.find_by_email_or_id('id', user_id)
         if not user:
             return {'message': 'User not found'}, 404
         return user.json()
 
     @classmethod
     def delete(cls, user_id):
-        user = UserModel.find_by_username_or_id('id', user_id)
+        user = UserModel.find_by_email_or_id('id', user_id)
         if not user:
             return {'message': 'User not found'}, 404
         user.delete_from_db()
@@ -46,9 +46,9 @@ class UserRegister(Resource):
         """Creates a new user on signup"""
         data = _user_parser.parse_args()
 
-        if (UserModel.find_by_username_or_id('username',
-                                             data['username']) is not None):
-            message = "This username already exists"
+        if (UserModel.find_by_email_or_id('email',
+                                             data['email']) is not None):
+            message = "This email already exists"
             return {"message": message}, 400
 
         user = UserModel(**data)
@@ -62,7 +62,7 @@ class UserLogin(Resource):
     def post(self):
         data = _user_parser.parse_args()
 
-        user = UserModel.find_by_username_or_id('username', data['username'])
+        user = UserModel.find_by_email_or_id('email', data['email'])
 
         if user and safe_str_cmp(user.password, data['password']):
             access_token = create_access_token(identity=user.id, fresh=True)
