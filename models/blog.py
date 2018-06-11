@@ -38,9 +38,9 @@ class PostModel(db.Model):
         categories = [category.name for category in self.categories]
         return {
             'id': self.id,
-            'account_id': self.account_id,
+            'account': self.account.name,
             'title': self.title,
-            'publication_date': self.pub_date.__str__(),
+            'pub_date': self.pub_date.__str__(),
             'link': self.link,
             'author': self.author,
             'thumbnail': self.thumbnail,

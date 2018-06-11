@@ -1,6 +1,7 @@
 from flask import Flask, jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
 from resources.blog import Post, PostList, PostAccountList, PostCategoryList, CategoryList
 from resources.account import Account, AccountList
@@ -21,6 +22,7 @@ app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
 app.secret_key = SECRET_KEY
 api = Api(app)
 
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 @app.before_first_request
 def create_tables():
