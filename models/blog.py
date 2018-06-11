@@ -21,10 +21,11 @@ class PostModel(db.Model):
     author = db.Column(db.String(80))
     thumbnail = db.Column(db.String(300))
     description = db.Column(db.Text)
+    content = db.Column(db.Text)
     categories = db.relationship('CategoryModel', secondary=association_table)
     
 
-    def __init__(self, account_id, title, pub_date, link, author, thumbnail, description, categories = []):
+    def __init__(self, account_id, title, pub_date, link, author, thumbnail, description, content, categories = []):
         self.account_id = account_id
         self.title = title
         self.pub_date = pub_date
@@ -32,6 +33,7 @@ class PostModel(db.Model):
         self.author = author
         self.thumbnail = thumbnail
         self.description = description
+        self.content = content
         self.categories = categories
 
     def json(self):

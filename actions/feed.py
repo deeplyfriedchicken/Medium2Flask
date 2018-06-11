@@ -5,6 +5,8 @@ from models.blog import PostModel, CategoryModel
 
 from models.account import AccountModel
 
+from actions.soup import getBlurb
+
 
 class FeedScraper():
     """Scrapes the Medium XML and saves it to the DB"""
@@ -28,6 +30,7 @@ class FeedScraper():
                 # if exists, do not save unless pubDate is different
                 post = PostModel.find_by_title(item['title'])
                 categories = [CategoryModel.get_or_create(category) for category in item['categories']]
+                description = getBlurb(item['description'])
                 new_post = PostModel(
                         accounts[i].id,
                         item['title'],
@@ -35,7 +38,8 @@ class FeedScraper():
                         item['link'],
                         item['author'],
                         item['thumbnail'],
-                        item['description'],
+                        description,
+                        item['content'],
                         categories
                     )
                 if post is None:
