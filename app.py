@@ -4,7 +4,7 @@ from flask_jwt_extended import JWTManager
 
 from resources.blog import Post, PostList
 from resources.account import Account, AccountList
-from resources.user import UserLogin, UserLogout
+from resources.user import User, UserLogin, UserLogout
 
 from actions.register_user import registerUser
 
@@ -72,7 +72,7 @@ def token_not_fresh_callback():
 def revoked_token_callback():
     """When a user logouts, it revokes the token"""
     return jsonify({
-        'description': 'The token is not fresh.',
+        'description': 'The token is not fresh. Please login again.',
         'error': 'token_revoked'
     })
 
