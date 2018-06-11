@@ -79,9 +79,9 @@ def revoked_token_callback():
     })
 
 
-api.add_resource(PostList, '/api/posts')
-api.add_resource(PostCategoryList, '/api/posts/category/<string:category>')
-api.add_resource(PostAccountList, '/api/posts/account/<string:name>')
+api.add_resource(PostList, '/api/posts', endpoint='api.post_list')
+api.add_resource(PostCategoryList, '/api/posts/category/<string:category>', endpoint='api.post_category_list')
+api.add_resource(PostAccountList, '/api/posts/account/<string:name>', endpoint='api.post_account_list')
 api.add_resource(CategoryList, '/api/categories')
 api.add_resource(Account, '/api/account/<string:name>')
 api.add_resource(AccountList, '/api/accounts')
@@ -92,4 +92,3 @@ if __name__ == '__main__':
     from db import db
     db.init_app(app)
     app.run(port=5000, debug=True)
-
