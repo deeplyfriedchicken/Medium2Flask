@@ -3,7 +3,7 @@ import time
 from flask import Flask
 from db import db
 
-from feed import FeedScraper
+from actions.feed import FeedScraper
 from secrets import DB_PATH
 
 app = Flask(__name__)

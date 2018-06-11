@@ -1,8 +1,6 @@
 import sqlite3
 from db import db
 
-from models.blog import PostModel
-
 
 class AccountModel(db.Model):
     __tablename__ = 'accounts'
@@ -27,6 +25,10 @@ class AccountModel(db.Model):
     @classmethod
     def find_by_name(cls, name):
         return cls.query.filter_by(name=name).first()
+
+    @classmethod
+    def find_by_name_and_active(cls, name):
+        return cls.query.filter_by(name=name, is_active=True).first()
 
     @classmethod
     def find_all(cls):

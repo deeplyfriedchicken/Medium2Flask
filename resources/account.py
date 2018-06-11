@@ -4,6 +4,8 @@ from flask_restful import Resource, reqparse, inputs
 from models.account import AccountModel
 
 
+from flask_jwt_extended import jwt_required
+
 class Account(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('is_active',
@@ -19,6 +21,7 @@ class Account(Resource):
         else:
             return {'message': 'Account not found'}, 404
     
+    @jwt_required
     def post(self, name):
         if AccountModel.find_by_name(name):
             return {
@@ -36,6 +39,7 @@ class Account(Resource):
 
         return account.json(), 201
 
+    @jwt_required
     def put(self, name):
         data = Account.parser.parse_args()
 
@@ -49,6 +53,7 @@ class Account(Resource):
         account.save_to_db()
         return account.json()
 
+    @jwt_required
     def delete(self, name):
         account = AccountModel.find_by_name(name)
         if account:
