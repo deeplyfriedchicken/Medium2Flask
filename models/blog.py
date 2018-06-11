@@ -2,6 +2,8 @@ import sqlite3
 from db import db
 from sqlalchemy import and_, desc
 
+from flask_restful import url_for
+
 from models.account import AccountModel
 
 association_table = db.Table('posts_categories', db.Model.metadata,
@@ -51,6 +53,39 @@ class PostModel(db.Model):
         }
 
     @classmethod
+    def paginate(cls, page):
+        paginate = cls.find_all_active().paginate(page, 5, False)
+        next_url = url_for('api.post_list', page=paginate.next_num) if paginate.has_next else None
+        prev_url = url_for('api.post_list', page=paginate.prev_num) if paginate.has_prev else None
+        return {
+            'posts': paginate.items,
+            'next': next_url,
+            'prev': prev_url
+        }
+
+    @classmethod
+    def paginate_by_account(cls, name, page):
+        paginate = cls.find_by_account(name).paginate(page, 5, False)
+        next_url = url_for('api.post_account_list', page=paginate.next_num, name=name) if paginate.has_next else None
+        prev_url = url_for('api.post_account_list', page=paginate.prev_num, name=name) if paginate.has_prev else None
+        return {
+            'posts': paginate.items,
+            'next': next_url,
+            'prev': prev_url
+        }
+
+    @classmethod
+    def paginate_by_category(cls, category, page):
+        paginate = cls.find_by_category(category).paginate(page, 5, False)
+        next_url = url_for('api.post_category_list', page=paginate.next_num, category=category) if paginate.has_next else None
+        prev_url = url_for('api.post_category_list', page=paginate.prev_num, category=category) if paginate.has_prev else None
+        return {
+            'posts': paginate.items,
+            'next': next_url,
+            'prev': prev_url
+        }
+
+    @classmethod
     def find_by_title(cls, title):
         return cls.query.filter_by(title=title).first()
 
@@ -64,17 +99,11 @@ class PostModel(db.Model):
 
     @classmethod
     def find_by_account(cls, account_name):
-        account = AccountModel.find_by_name_and_active(account_name)
-        if account is None:
-            return []
-        return cls.query.filter_by(account_id=account.id).order_by(desc(cls.pub_date))
+        return cls.query.filter(cls.account.has(name=account_name)).order_by(desc(cls.pub_date))
 
     @classmethod
     def find_by_category(cls, category_name):
-        category = CategoryModel.find_by_name(category_name)
-        if category is None:
-            return []
-        return cls.query.filter(and_(cls.account.has(is_active=True), cls.categories.any(id=category.id))).order_by(desc(cls.pub_date))
+        return cls.query.filter(and_(cls.account.has(is_active=True), cls.categories.any(CategoryModel.name.contains(category_name)))).order_by(desc(cls.pub_date))
 
     def save_to_db(self):
         db.session.add(self)

@@ -1,5 +1,6 @@
 import sqlite3
 from flask_restful import Resource
+from flask import request
 
 from models.blog import PostModel, CategoryModel
 
@@ -15,26 +16,38 @@ class Post(Resource):
     # delete + JWT
 
 class PostList(Resource):
-    """Lists the items"""
+    """Paginates the posts"""
     def get(self):
-        posts = [post.json() for post in PostModel.find_all_active()]
+        page = request.args.get('page', 1, type=int)
+        paginate = PostModel.paginate(page)
+        posts = [post.json() for post in paginate['posts']]
         return {
+            'next': paginate['next'],
+            'prev': paginate['prev'],
             'posts': posts
         }
 
 class PostCategoryList(Resource):
-    """Lists the items by a specified category"""
+    """Paginates the posts by a specified category"""
     def get(self, category):
-        posts = [post.json() for post in PostModel.find_by_category(category)]
+        page = request.args.get('page', 1, type=int)
+        paginate = PostModel.paginate_by_category(category, page)
+        posts = [post.json() for post in paginate['posts']]
         return {
+            'next': paginate['next'],
+            'prev': paginate['prev'],
             'posts': posts
         }
 
 class PostAccountList(Resource):
-    """Lists the items"""
+    """Paginates the posts by a specified account"""
     def get(self, name):
-        posts = [post.json() for post in PostModel.find_by_account(name)]
+        page = request.args.get('page', 1, type=int)
+        paginate = PostModel.paginate_account(name, page)
+        posts = [post.json() for post in paginate['posts']]
         return {
+            'next': paginate['next'],
+            'prev': paginate['prev'],
             'posts': posts
         }
 
