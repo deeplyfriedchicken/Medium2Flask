@@ -8,12 +8,16 @@ from resources.user import UserLogin, UserLogout
 
 from actions.register_user import registerUser
 
+from blacklist import BLACKLIST
+
 from secrets import DB_PATH, SECRET_KEY
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = DB_PATH
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PROPAGATE_EXCEPTIONS'] = True
+app.config['JWT_BLACKLIST_ENABLED'] = True
+app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
 app.secret_key = SECRET_KEY
 api = Api(app)
 
@@ -24,6 +28,54 @@ def create_tables():
     registerUser()
 
 jwt = JWTManager(app)  # not creating /auth
+
+
+@jwt.token_in_blacklist_loader
+def check_if_token_in_blacklist(decrypted_token):
+    """Determines if blacklisted and redirects to revoked token loader if so"""
+    return decrypted_token['jti'] in BLACKLIST
+
+
+@jwt.expired_token_loader
+def expired_token_callback(error):
+    return jsonify({
+        'description': 'The token has expired',
+        'error': 'token_expired'
+    }), 401
+
+
+@jwt.invalid_token_loader
+def invalid_token_callback(error):
+    return jsonify({
+        'description': 'Signature verification failed',
+        'error': 'invalid_token'
+    }), 401
+
+
+@jwt.unauthorized_loader
+def missing_token_callback(error):
+    return jsonify({
+        'description': 'Request does not contain an access token.',
+        'error': 'authorization_required'
+    }), 401
+
+
+@jwt.needs_fresh_token_loader
+def token_not_fresh_callback():
+    return jsonify({
+        'description': 'The token is not fresh',
+        'error': 'fresh_token_required'
+    }), 401
+
+
+@jwt.revoked_token_loader
+def revoked_token_callback():
+    """When a user logouts, it revokes the token"""
+    return jsonify({
+        'description': 'The token is not fresh.',
+        'error': 'token_revoked'
+    })
+
 
 api.add_resource(PostList, '/api/posts')
 api.add_resource(Account, '/api/account/<string:name>')
