@@ -37,7 +37,7 @@ def check_if_token_in_blacklist(decrypted_token):
 
 
 @jwt.expired_token_loader
-def expired_token_callback(error):
+def expired_token_callback():
     return jsonify({
         'description': 'The token has expired',
         'error': 'token_expired'
@@ -47,7 +47,7 @@ def expired_token_callback(error):
 @jwt.invalid_token_loader
 def invalid_token_callback(error):
     return jsonify({
-        'description': 'Signature verification failed',
+        'description': 'Signature verification failed. Invalid token detected.',
         'error': 'invalid_token'
     }), 401
 
@@ -63,7 +63,7 @@ def missing_token_callback(error):
 @jwt.needs_fresh_token_loader
 def token_not_fresh_callback():
     return jsonify({
-        'description': 'The token is not fresh',
+        'description': 'The token is not fresh. Please login again.',
         'error': 'fresh_token_required'
     }), 401
 

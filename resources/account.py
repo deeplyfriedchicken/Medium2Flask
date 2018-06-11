@@ -56,9 +56,9 @@ class Account(Resource):
     @jwt_required
     def delete(self, name):
         account = AccountModel.find_by_name(name)
-        if account:
-            account.delete_from_db()
-
+        if account is None:
+            return {'message': "No account exists."}
+        account.delete_from_db()
         return {'message': "Account deleted"}
 
 
