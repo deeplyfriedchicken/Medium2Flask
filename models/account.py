@@ -27,6 +27,10 @@ class AccountModel(db.Model):
         return cls.query.filter_by(name=name).first()
 
     @classmethod
+    def find_by_name_and_active(cls, name):
+        return cls.query.filter_by(name=name, is_active=True).first()
+
+    @classmethod
     def find_all(cls):
         return cls.query.all()
     

@@ -62,7 +62,7 @@ class PostModel(db.Model):
 
     @classmethod
     def find_by_account(cls, account_name):
-        account = AccountModel.query.filter_by(name=account_name, is_active=True).first()
+        account = AccountModel.find_by_name_and_active(account_name)
         if account is None:
             return []
         return cls.query.filter_by(account_id=account.id)
