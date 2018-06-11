@@ -4,7 +4,7 @@ from flask_jwt_extended import JWTManager
 
 from resources.blog import Post, PostList, PostAccountList, PostCategoryList, CategoryList
 from resources.account import Account, AccountList
-from resources.user import User, UserLogin, UserLogout
+from resources.user import UserLogin, UserLogout
 
 from actions.register_user import registerUser
 
