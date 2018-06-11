@@ -17,7 +17,7 @@ class Post(Resource):
 class PostList(Resource):
     """Lists the items"""
     def get(self):
-        posts = [post.json() for post in PostModel.find_all()]
+        posts = [post.json() for post in PostModel.find_all_active()]
         return {
             'posts': posts
         }
@@ -25,7 +25,7 @@ class PostList(Resource):
 class PostCategoryList(Resource):
     """Lists the items by a specified category"""
     def get(self, category):
-        posts = [post.json() for post in PostModel.find_all()]
+        posts = [post.json() for post in PostModel.find_by_category(category)]
         return {
             'posts': posts
         }

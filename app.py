@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 
-from resources.blog import Post, PostList, PostAccountList
+from resources.blog import Post, PostList, PostAccountList, PostCategoryList, CategoryList
 from resources.account import Account, AccountList
 from resources.user import User, UserLogin, UserLogout
 
@@ -78,7 +78,9 @@ def revoked_token_callback():
 
 
 api.add_resource(PostList, '/api/posts')
+api.add_resource(PostCategoryList, '/api/posts/category/<string:category>')
 api.add_resource(PostAccountList, '/api/posts/account/<string:name>')
+api.add_resource(CategoryList, '/api/categories')
 api.add_resource(Account, '/api/account/<string:name>')
 api.add_resource(AccountList, '/api/accounts')
 api.add_resource(UserLogin, '/login')

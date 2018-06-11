@@ -1,5 +1,6 @@
 import sqlite3
 from db import db
+from sqlalchemy import and_
 
 from models.account import AccountModel
 
@@ -13,6 +14,7 @@ class PostModel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     account_id = db.Column(db.Integer, db.ForeignKey('accounts.id'))
+    account = db.relationship('AccountModel')
     title = db.Column(db.String(80))
     pub_date = db.Column(db.DateTime)
     link = db.Column(db.String(300))
@@ -55,11 +57,22 @@ class PostModel(db.Model):
         return cls.query.all()
 
     @classmethod
+    def find_all_active(cls):
+        return cls.query.filter(cls.account.has(is_active=True))
+
+    @classmethod
     def find_by_account(cls, account_name):
-        account = AccountModel.query.filter_by(name=account_name).first()
+        account = AccountModel.query.filter_by(name=account_name, is_active=True).first()
         if account is None:
             return []
         return cls.query.filter_by(account_id=account.id)
+
+    @classmethod
+    def find_by_category(cls, category_name):
+        category = CategoryModel.find_by_name(category_name)
+        if category is None:
+            return []
+        return cls.query.filter(and_(cls.account.has(is_active=True), cls.categories.any(id=category.id)))
 
     def save_to_db(self):
         db.session.add(self)
