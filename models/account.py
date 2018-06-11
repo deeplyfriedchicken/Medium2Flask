@@ -1,8 +1,6 @@
 import sqlite3
 from db import db
 
-from models.blog import PostModel
-
 
 class AccountModel(db.Model):
     __tablename__ = 'accounts'

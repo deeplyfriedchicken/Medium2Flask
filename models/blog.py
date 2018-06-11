@@ -1,6 +1,8 @@
 import sqlite3
 from db import db
 
+from models.account import AccountModel
+
 association_table = db.Table('posts_categories', db.Model.metadata,
     db.Column('post_id', db.Integer, db.ForeignKey('posts.id')),
     db.Column('category_id', db.Integer, db.ForeignKey('categories.id'))
@@ -53,8 +55,11 @@ class PostModel(db.Model):
         return cls.query.all()
 
     @classmethod
-    def find_by_account(cls, account_id):
-        return cls.query.filter_by(account_id=account_id)
+    def find_by_account(cls, account_name):
+        account = AccountModel.query.filter_by(name=account_name).first()
+        if account is None:
+            return []
+        return cls.query.filter_by(account_id=account.id)
 
     def save_to_db(self):
         db.session.add(self)

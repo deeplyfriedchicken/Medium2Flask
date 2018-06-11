@@ -22,6 +22,22 @@ class PostList(Resource):
             'posts': posts
         }
 
+class PostCategoryList(Resource):
+    """Lists the items by a specified category"""
+    def get(self, category):
+        posts = [post.json() for post in PostModel.find_all()]
+        return {
+            'posts': posts
+        }
+
+class PostAccountList(Resource):
+    """Lists the items"""
+    def get(self, name):
+        posts = [post.json() for post in PostModel.find_by_account(name)]
+        return {
+            'posts': posts
+        }
+
 
 class Category(Resource):
     def get(self, name):
