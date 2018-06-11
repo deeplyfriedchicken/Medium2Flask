@@ -51,7 +51,7 @@ class Category(Resource):
 class CategoryList(Resource):
     """Lists the items"""
     def get(self):
-        categories = [category.json() for category in CategoryModel.find_all()]
+        categories = [category.name for category in CategoryModel.find_all()]
         return {
           'categories': categories
         }

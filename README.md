@@ -13,5 +13,18 @@ This application serves as a Flask backend for users who want a simple Medium AP
 Scheduling can be adjusted in `cron.py` for various times. See `schedule` for more information.
 
 ## Endpoints
-To be determined
+
+The following endpoints can be accessed via URL calls. Note which need authorization and given fields.
+
+| URL                            | METHOD | FUNCTION           | FIELDS |AUTH? |
+| ------------------------------ | ------ | ------------------ | ------ | ---- |
+| `/api/posts`                     | GET    | Gets all **active** account posts | None | No |
+| `/api/posts/account/:name:`      | GET    | Gets all **active** posts by that account | None | No |
+| `/api/posts/category/:category:` | GET    | Gets all **active** posts from that category      | None | No | 
+| `/api/categories`                | GET    | Gets all categories | None | No |
+| `/api/accounts`                  | GET    | Gets all accounts   | None | No |
+| `/api/account/:name:`            | POST   | Adds a **new** account | `is_active` | Yes |
+| `/api/account/:name:`            | PUT    | Updates an account | `is_active` | Yes |
+| `/login`                         | POST   | Signs an existing user in | `email`, `password` | No |
+| `/logout`                        | POST   | Signs a user out | None | Yes
 
