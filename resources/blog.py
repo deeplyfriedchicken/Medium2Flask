@@ -43,7 +43,7 @@ class PostAccountList(Resource):
     """Paginates the posts by a specified account"""
     def get(self, name):
         page = request.args.get('page', 1, type=int)
-        paginate = PostModel.paginate_account(name, page)
+        paginate = PostModel.paginate_by_account(name, page)
         posts = [post.json() for post in paginate['posts']]
         return {
             'next': paginate['next'],
